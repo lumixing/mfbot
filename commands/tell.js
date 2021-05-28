@@ -1,4 +1,5 @@
 const error = require("../functions/error");
+const success = require("../functions/success");
 
 module.exports.run = async (msg, args) => {
   let mentioned = msg.mentions.members.first();
@@ -8,11 +9,14 @@ module.exports.run = async (msg, args) => {
   }
 
   args.shift();
+
   if (!args.length) {
     return error(msg, "you didnt type the message you want to send!");
   }
   
-    mentioned.send(args.join(" ")).catch((err) => error(msg, `couldnt send the message!\n${String(err)}`));
+  mentioned.send(args.join(" "))
+  .then(() => success(msg, `successfully sent message to **${mentioned.user.tag}**`))
+  .catch((err) => error(msg, `couldnt send the message!\n${String(err)}`));
 }
 module.exports.meta = {
 	name: "tell",
