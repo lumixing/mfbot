@@ -59,7 +59,7 @@ bot.on("message", (msg) => {
 
 		if (command.meta.category === "dev" && msg.author.id !== "235072703306924032") return;
 
-    if (command.meta.category === "moderation" && !msg.member.roles.cache.find((role) => role.name === "Staff") || msg.author.id !== msg.guild.ownerID) return;
+    if ((command.meta.category === "moderation") && (!msg.member.roles.cache.find((role) => role.name === "Staff") || msg.author.id !== msg.guild.ownerID)) return;
 
 		if (command.meta.argsRequired && !args.length) {
       return error(msg, `invalid arguement\nusage: \`${prefix}${command.meta.usage}\``);
