@@ -17,6 +17,7 @@ const bot = new Client({
 
 bot.commands = new Collection();
 bot.aliases = new Collection();
+bot.categories = new Collection();
 
 const commandFiles = readdirSync("./commands").filter((file) => file.endsWith(".js"));
 
@@ -24,12 +25,20 @@ for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 
 	bot.commands.set(command.meta.name, command);
+  
+  if (command.meta.aliases.length) {
+    command.meta.aliases.forEach((alias) => {
+      bot.aliases.set(alias, command);
+    });
+  }
 
-	if (command.meta.aliases.length) {
-		command.meta.aliases.forEach((alias) => {
-			bot.aliases.set(alias, command);
-		});
-	}
+  if (!bot.categories.has(command.meta.category)) {
+    bot.categories.set(command.meta.category, new Collection().set(command.meta.name, command));
+  }
+  else {
+    bot.categories.get(command.meta.category).set(command.meta.name, command);
+  }
+
 }
 
 bot.on("ready", () => {
