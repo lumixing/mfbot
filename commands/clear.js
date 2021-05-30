@@ -15,7 +15,7 @@ module.exports.run = async (msg, args) => {
     return error(msg, "number of messages must be under 100");
   }
 
-  msg.channel.bulkDelete(messages).then((m) => {
+  msg.channel.bulkDelete(messages, true).then((m) => {
     msg.channel.send({ embed: {
       color: WHITE,
       description: `deleted \`${m.size}\` messages`
@@ -29,6 +29,7 @@ module.exports.run = async (msg, args) => {
     }
 
     error(msg, `an error occured\n${err}`);
+    console.log(err);
   })
 }
 module.exports.meta = {
