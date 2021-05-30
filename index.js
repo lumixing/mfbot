@@ -46,20 +46,39 @@ bot.on("ready", () => {
 });
 
 bot.on("message", (msg) => {
-	if (!msg.content.startsWith(prefix) || msg.author.bot) return;
-	if (msg.channel.type !== "text") return;
+	if (!msg.content.startsWith(prefix) || msg.author.bot) {
+    return;
+    // return console.log("normal message or bot author");
+  }
+	if (msg.channel.type !== "text") {
+    return;
+    // return console.log("isnt in server text channel");
+  }
 
 	const args = msg.content.slice(prefix.length).trim().split(/ +/);
 	const cmd = args.shift().toLowerCase();
 
-	if (!bot.commands.has(cmd) && !bot.aliases.has(cmd)) return;
+	if (!bot.commands.has(cmd) && !bot.aliases.has(cmd)) {
+    return;
+    // return console.log("that command isnt valid");
+  }
 
 	try {
 		const command = bot.commands.get(cmd) || bot.aliases.get(cmd);
 
-		if (command.meta.category === "dev" && msg.author.id !== "235072703306924032") return;
+    const isOwner = msg.author.id === "235072703306924032";
+    const isServerOwner = msg.author.id === msg.guild.ownerID;
+    const isServerStaff = msg.member.roles.cache.find((role) => role.name === "Staff");
 
-    if ((command.meta.category === "moderation") && (!msg.member.roles.cache.find((role) => role.name === "Staff") || msg.author.id !== msg.guild.ownerID)) return;
+		if (command.meta.category === "dev" && !isOwner) {
+      return;
+      // return console.log("command is dev and user isnt owner");
+    }
+
+    if (command.meta.category === "moderation" && !isServerOwner && !isServerStaff) {
+      return;
+      // return console.log("command is mod and user isnt Staff or server owner");
+    }
 
 		if (command.meta.argsRequired && !args.length) {
       return error(msg, `invalid arguement\nusage: \`${prefix}${command.meta.usage}\``);
