@@ -81,7 +81,7 @@ bot.on("message", (msg) => {
 		}
 
 		if (!msg.guild.me.hasPermission(command.meta.botPermissions)) {
-			return error(msg, `to run this command i need these permissions:\n\`${command.meta.botPermissions.join(", ")}\``);
+			return error(msg, `to run this command i need these permissions:\n\`${command.meta.botPermissions.join(", ")}\`\nfor more info type \`${prefix}perms\``);
 		}
 
 		if (command.meta.argsRequired && !args.length) {
