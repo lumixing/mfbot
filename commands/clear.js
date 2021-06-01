@@ -21,15 +21,12 @@ module.exports.run = async (msg, args) => {
 				color: WHITE,
 				description: `deleted \`${m.size}\` messages`
 			}
-		}).then((emb) => {
-			emb.delete({ timeout: 3000 }).catch((err) => 0);
 		})
+			.then((emb) => {
+				emb.delete({ timeout: 3000 }).catch((err) => 0);
+			})
 	})
 		.catch((err) => {
-			if (String(err) === "DiscordAPIError: You can only bulk delete messages that are under 14 days old.") {
-				return error(msg, "tried to delete 14 days old message, try again with smaller number");
-			}
-
 			error(msg, `an error occured\n${err}`);
 			console.log(err);
 		})
