@@ -8,16 +8,18 @@ module.exports.run = async (msg, args) => {
 	if (ping < 200) dynamicColor = YELLOW;
 	if (ping < 100) dynamicColor = GREEN;
 
-	msg.channel.send({ embed: {
-		color: dynamicColor,
-		description: `latency is **${ping}ms**`
-	}});
+	msg.channel.send({
+		embed: {
+			color: dynamicColor,
+			description: `latency is **${ping}ms**`
+		}
+	});
 }
 module.exports.meta = {
 	name: "ping",
 	aliases: ["p"],
 	description: "pings the bot and returns latency",
-  usage: "ping",
+	usage: "ping",
 	argsRequired: false,
 	category: "utility"
 }
