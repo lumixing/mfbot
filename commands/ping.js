@@ -1,19 +1,27 @@
 const { GREEN, YELLOW, RED } = require("../resources/colors.json");
 
 module.exports.run = async (msg, args) => {
-	const ping = msg.client.ws.ping;
+	const apiLatency = msg.client.ws.ping;
 	let dynamicColor;
 
-	if (ping >= 200) dynamicColor = RED;
-	if (ping < 200) dynamicColor = YELLOW;
-	if (ping < 100) dynamicColor = GREEN;
+	if (apiLatency >= 200) dynamicColor = RED;
+	if (apiLatency < 200) dynamicColor = YELLOW;
+	if (apiLatency < 100) dynamicColor = GREEN;
 
 	msg.channel.send({
 		embed: {
 			color: dynamicColor,
-			description: `latency is **${ping}ms**`
+			description: `**api latency**: ${apiLatency}ms`
 		}
-	});
+	})
+		.then((m) => {
+			m.edit({
+				embed: {
+					color: dynamicColor,
+					description: `**api latency**: ${apiLatency}ms\n**response latency**: ${m.createdTimestamp - msg.createdTimestamp}ms`
+				}
+			})
+		})
 }
 module.exports.meta = {
 	name: "ping",
