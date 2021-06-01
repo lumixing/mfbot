@@ -80,6 +80,10 @@ bot.on("message", (msg) => {
 			// return console.log("command is mod and user isnt Staff or server owner");
 		}
 
+		if (!msg.guild.me.hasPermission(command.meta.botPermissions)) {
+			return error(msg, `to run this command i need these permissions:\n\`${command.meta.botPermissions.join(", ")}\``);
+		}
+
 		if (command.meta.argsRequired && !args.length) {
 			return error(msg, `invalid arguement\nusage: \`${prefix}${command.meta.usage}\``);
 		}

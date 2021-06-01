@@ -37,5 +37,6 @@ module.exports.meta = {
 	description: "clears the messages in channel",
 	usage: "clear (number of messages)",
 	argsRequired: false,
-	category: "moderation"
+	category: "moderation",
+	botPermissions: ["MANAGE_MESSAGES"]
 }
