@@ -2,7 +2,7 @@ const error = require("../functions/error");
 const success = require("../functions/success");
 
 const HigherLower = require("../games/HigherLower");
-const games = require("../games/higherlowergames");
+const games = require("../games/games");
 
 module.exports.run = async (msg, args) => {
 	let max = parseInt(args[0]);
@@ -17,11 +17,11 @@ module.exports.run = async (msg, args) => {
 
 	let newGame = new HigherLower(msg, games, msg.author, max);
 
-	if (!(msg.guild.id in games)) {
-		games[msg.guild.id] = {};
+	if (!(msg.guild.id in games.higherlower)) {
+		games.higherlower[msg.guild.id] = {};
 	}
 
-	games[msg.guild.id][msg.author.id] = newGame;
+	games.higherlower[msg.guild.id][msg.author.id] = newGame;
 }
 module.exports.meta = {
 	name: "higherlower",

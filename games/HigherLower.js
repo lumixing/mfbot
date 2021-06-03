@@ -41,7 +41,7 @@ module.exports = class HigherLower {
 				if (s === "game") {
 					if (this.player.id !== "235072703306924032") return;
 
-					console.log(this.#games[this.server.id][this.player.id]);
+					console.log(this.#games.higherlower[this.server.id][this.player.id]);
 					return this.retry(msg, "logged game to console, try again...", false);
 				}
 				if (s === "number") {
@@ -78,6 +78,6 @@ module.exports = class HigherLower {
 
 	endGame(msg, text) {
 		msg.reply(text);
-		delete this.#games[this.server.id][this.player.id];
+		delete this.#games.higherlower[this.server.id][this.player.id];
 	}
 }
