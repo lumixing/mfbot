@@ -6,9 +6,10 @@ module.exports.run = async (msg, args) => {
 
 	if (!args.length) {
 		date = new Date();
+		return msg.channel.send(`${date.getTime()}\n${date.toLocaleString()}`);
 	}
 
-	msg.channel.send(`${date.getTime()}\n${date.toLocaleString()}\n${ta.ago(date)}`);
+	return msg.channel.send(`${date.getTime()}\n${date.toLocaleString()}\n${ta.ago(date)}`);
 }
 module.exports.meta = {
 	name: "millis",
