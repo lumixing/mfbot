@@ -5,11 +5,17 @@ const HigherLower = require("../games/HigherLower");
 const games = require("../games/higherlowergames");
 
 module.exports.run = async (msg, args) => {
-	if (args[0] === "view") {
-		return console.log(games);
+	let max = parseInt(args[0]);
+
+	if (max > 1000000) {
+		max = 1000000;
 	}
 
-	let newGame = new HigherLower(msg, games, msg.author);
+	if (isNaN(max) || Math.sign(max) !== 1) {
+		max = 100;
+	}
+
+	let newGame = new HigherLower(msg, games, msg.author, max);
 
 	if (!(msg.guild.id in games)) {
 		games[msg.guild.id] = {};
@@ -21,7 +27,7 @@ module.exports.meta = {
 	name: "higherlower",
 	aliases: ["hl"],
 	description: "a game of higher lower",
-	usage: "higherlower",
+	usage: "higherlower (max number)",
 	argsRequired: false,
 	category: "games"
 }
