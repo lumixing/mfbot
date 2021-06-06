@@ -1,8 +1,7 @@
 const error = require("../functions/error");
 
 module.exports.run = async (msg, args) => {
-	const clear = console.clear();
-	const line = console.log("==========================================================");
+	const games = require("../games/games");
 
 	try {
 		let result = eval(args.join(" "));
