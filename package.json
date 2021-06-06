@@ -1,6 +1,6 @@
 {
   "name": "mfbot",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "the best discord bot",
   "main": "index.js",
   "scripts": {
