@@ -33,21 +33,21 @@ module.exports = class HigherLower {
 					return this.endGame(msg, `exited game, number was ${this.#number}`);
 				}
 				if (s === "games") {
-					if (this.player.id !== "235072703306924032") return;
-
-					console.log(this.#games);
-					return this.retry(msg, "logged games to console, try again...", false);
+					if (this.player.id === "235072703306924032") {
+						console.log(this.#games);
+						return this.retry(msg, "logged games to console, try again...", false);
+					}
 				}
 				if (s === "game") {
-					if (this.player.id !== "235072703306924032") return;
-
-					console.log(this.#games.higherlower[this.server.id][this.player.id]);
-					return this.retry(msg, "logged game to console, try again...", false);
+					if (this.player.id === "235072703306924032") {
+						console.log(this.#games.higherlower[this.server.id][this.player.id]);
+						return this.retry(msg, "logged game to console, try again...", false);
+					}
 				}
 				if (s === "number") {
-					if (this.player.id !== "235072703306924032") return;
-
-					return this.retry(msg, `number is ${this.#number}, try again...`, false);
+					if (this.player.id === "235072703306924032") {
+						return this.retry(msg, `number is ${this.#number}, try again...`, false);
+					}
 				}
 				if (isNaN(m)) {
 					return this.retry(msg, "your answer needs to be a number, try again...", false);

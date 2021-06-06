@@ -5,6 +5,10 @@ const HigherLower = require("../games/HigherLower");
 const games = require("../games/games");
 
 module.exports.run = async (msg, args) => {
+	if (msg.guild.id in games.higherlower && msg.author.id in games.higherlower[msg.guild.id]) {
+		return msg.reply("you are already in a game!");
+	}
+
 	let max = parseInt(args[0]);
 
 	if (max > 1000000) {
