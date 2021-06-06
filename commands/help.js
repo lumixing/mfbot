@@ -4,25 +4,54 @@ const error = require("../functions/error");
 
 module.exports.run = async (msg, args) => {
 	if (!args.length) {
-		let commandNamesArray = msg.client.commands.map((cmd) => "``" + cmd.meta.name + "``");
+		let descriptionArray = [];
+
+		msg.client.categories.each((key, value) => {
+			descriptionArray.push(`\`${value}\` (${key.array().length} commands)`);
+		});
 
 		return msg.channel.send({
 			embed: {
 				color: WHITE,
-				title: "list of commands",
-				description: `current prefix is \`${prefix}\`\n` + commandNamesArray.join(" "),
+				author: {
+					name: "mfbot command categories",
+					icon_url: msg.client.user.avatarURL()
+				},
+				title: `type \`${prefix}help [category name]\` for a list of commands`,
+				description: descriptionArray.join("\n"),
 				footer: {
-					text: commandNamesArray.length + " commands"
+					text: `${msg.client.commands.array().length} total commands`
 				}
 			}
 		});
 	}
 
-	if (!msg.client.commands.has(args[0]) && !msg.client.aliases.has(args[0])) {
-		return error(msg, "this command doesnt exist");
+	let input = args[0].toLowerCase();
+
+	if (!msg.client.commands.has(input) && !msg.client.aliases.has(input) && !msg.client.categories.has(input)) {
+		return error(msg, `that command or category name doesnt exist\ntype \`${prefix}help\` for more help`);
 	}
 
-	let command = msg.client.commands.get(args[0]) || msg.client.aliases.get(args[0]);
+	if (msg.client.categories.has(input)) {
+		let commandsArray = [];
+
+		msg.client.categories.get(input).each((key) => {
+			commandsArray.push(`\`${prefix}${key.meta.name}\``);
+		});
+
+		return msg.channel.send({
+			embed: {
+				color: WHITE,
+				title: `list of commands in ${input}\ntype \`${prefix}help [command name]\` for more info about a command`,
+				description: commandsArray.join(" "),
+				footer: {
+					text: `${commandsArray.length} commands`
+				}
+			}
+		})
+	}
+
+	let command = msg.client.commands.get(input) || msg.client.aliases.get(input);
 	command = command.meta;
 
 	let descriptionArray = [

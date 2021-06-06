@@ -9,7 +9,26 @@ module.exports.run = async (msg, args) => {
 	const guild = msg.guild;
 
 	try {
-		let result = await eval(args.join(" "));
+		let code = args.join(" ");
+
+		if (!args.length) {
+			msg.reply("waiting for code reply... type `cancel` to cancel\n\\`\\`\\`js\n\n\\`\\`\\`");
+
+			let filter = (m) => m.author.id === msg.author.id;
+			let msgs = await msg.channel.awaitMessages(filter, { max: 1 });
+
+			code = msgs.first().content;
+
+			if (code === "cancel") {
+				return msg.reply("cancelled evaluation");
+			}
+		}
+
+		code = code.replace("```js", "");
+		code = code.replace("```", "");
+
+		let result = await eval(code);
+
 		result = JSON.stringify(result, null, 2);
 		msg.channel.send(result, { code: "json" })
 			.catch(async (err) => {
@@ -39,6 +58,6 @@ module.exports.meta = {
 	aliases: ["ev"],
 	description: "evaluates code",
 	usage: "eval [code]",
-	argsRequired: true,
+	argsRequired: false,
 	category: "dev"
 }
