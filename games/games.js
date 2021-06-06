@@ -1,3 +1,4 @@
 module.exports = {
-	higherlower: {}
+	higherlower: {},
+	tictactoe: {}
 };
