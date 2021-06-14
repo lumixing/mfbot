@@ -1,6 +1,6 @@
 const { WHITE } = require("../resources/colors.json");
 const error = require("../functions/error");
-const ta = require("time-ago");
+const ms = require("humanize-duration");
 
 module.exports.run = async (msg, args) => {
 	let user = msg.author;
@@ -14,6 +14,17 @@ module.exports.run = async (msg, args) => {
 		user = mention.user;
 	}
 
+	let currentDate = new Date();
+	let createdDate = new Date(user.createdTimestamp);
+	let options = { largest: 2, round: true };
+
+	let descriptionArray = [
+		`**created date**: ${createdDate.toLocaleString()}`,
+		`**created ms**: ${createdDate.getTime()}`,
+		`**age**: ${ms(currentDate - createdDate, options)}`,
+		`**birthday in**: ${ms(createdDate.setFullYear(currentDate.getFullYear()) - currentDate, options)}`
+	];
+
 	msg.channel.send({
 		embed: {
 			color: WHITE,
@@ -21,7 +32,7 @@ module.exports.run = async (msg, args) => {
 				name: user.tag,
 				icon_url: user.avatarURL()
 			},
-			description: `**created at**: ${new Date(user.createdTimestamp).toLocaleString()}\n**age**: ${ta.ago(user.createdTimestamp)}`
+			description: descriptionArray.join("\n")
 		}
 	});
 }
