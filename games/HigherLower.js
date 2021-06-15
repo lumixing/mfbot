@@ -18,42 +18,25 @@ module.exports = class HigherLower {
 	}
 
 	start(msg) {
-		msg.channel.send(`started game! type a number 1-${this.#max} to guess it...`);
+		msg.channel.send(`started game! type a number 1-${this.#max} to guess it... type \`end\` to end the game`);
 	}
 
 	awaitAnswer(msg) {
 		let filter = (m) => m.author.id === this.player.id;
-		msg.channel.awaitMessages(filter, { time: 30000, max: 1 })
+		msg.channel.awaitMessages(filter, { time: 5000, max: 1, errors: ["time"] })
 			.then((c) => {
 				let m = c.first().content;
 				let s = m;
 				m = parseInt(m);
 
-				if (s === "exit" || s === "quit") {
-					return this.endGame(msg, `exited game, number was ${this.#number}`);
-				}
-				if (s === "games") {
-					if (this.player.id === "235072703306924032") {
-						console.log(this.#games);
-						return this.retry(msg, "logged games to console, try again...", false);
-					}
-				}
-				if (s === "game") {
-					if (this.player.id === "235072703306924032") {
-						console.log(this.#games.higherlower[this.server.id][this.player.id]);
-						return this.retry(msg, "logged game to console, try again...", false);
-					}
-				}
-				if (s === "number") {
-					if (this.player.id === "235072703306924032") {
-						return this.retry(msg, `number is ${this.#number}, try again...`, false);
-					}
+				if (s === "end") {
+					return this.endGame(msg, `ended the game, number was ${this.#number}`);
 				}
 				if (isNaN(m)) {
-					return this.retry(msg, "your answer needs to be a number, try again...", false);
+					return this.retry(msg, "your answer needs to be a number, try again...");
 				}
 				if (m < 1 || m > this.#max) {
-					return this.retry(msg, `your answer must be between 1-${this.#max}, try again...`, false);
+					return this.retry(msg, `your answer must be between 1-${this.#max}, try again...`);
 				}
 				if (m < this.#number) {
 					return this.retry(msg, `higher!`, true);
@@ -65,12 +48,15 @@ module.exports = class HigherLower {
 					return this.endGame(msg, `yay! you won with ${this.#tries} tries! the number was ${this.#number}`);
 				}
 				else {
-					return this.retry(msg, "seems like u something broke... try again...", false);
+					return this.retry(msg, "seems like u something broke... try again...");
 				}
+			})
+			.catch((err) => {
+				return this.endGame(msg, `you ran out of time! number was ${this.#number}`);
 			})
 	}
 
-	retry(msg, text, countAsTry) {
+	retry(msg, text, countAsTry = false) {
 		if (countAsTry) this.#tries++;
 		msg.reply(text);
 		this.awaitAnswer(msg);
