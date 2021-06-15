@@ -1,4 +1,5 @@
 module.exports = {
 	higherlower: {},
-	tictactoe: {}
+	tictactoe: {},
+	minesweeper: {}
 };
