@@ -23,7 +23,7 @@ module.exports = class HigherLower {
 
 	awaitAnswer(msg) {
 		let filter = (m) => m.author.id === this.player.id;
-		msg.channel.awaitMessages(filter, { time: 5000, max: 1, errors: ["time"] })
+		msg.channel.awaitMessages(filter, { time: 30000, max: 1, errors: ["time"] })
 			.then((c) => {
 				let m = c.first().content;
 				let s = m;
