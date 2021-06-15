@@ -14,6 +14,10 @@ module.exports.run = async (msg, args) => {
 		return error(msg, "you need to mention a member for player2");
 	}
 
+	if (player2.user.bot) {
+		return error(msg, "you cant play with a bot!");
+	}
+
 	if (player2.id === msg.author.id) {
 		return error(msg, "you cant play with yourself...");
 	}
