@@ -4,6 +4,7 @@ const ms = require("humanize-duration");
 
 module.exports.run = async (msg, args) => {
 	let user = msg.author;
+	let member = msg.guild.member(user);
 	let mention = msg.mentions.members.first();
 
 	if (args.length > 0 && !mention) {
@@ -12,17 +13,22 @@ module.exports.run = async (msg, args) => {
 
 	if (args.length > 0 && mention.user) {
 		user = mention.user;
+		member = mention;
 	}
 
 	let currentDate = new Date();
 	let createdDate = new Date(user.createdTimestamp);
+	let joinedDate = new Date(member.joinedTimestamp);
 	let options = { largest: 2, round: true };
 
 	let descriptionArray = [
-		`**created date**: ${createdDate.toLocaleString()}`,
-		`**created ms**: ${createdDate.getTime()}`,
+		"**__account creation__**",
+		`**date**: ${createdDate.toLocaleString()}`,
 		`**age**: ${ms(currentDate - createdDate, options)}`,
-		`**birthday in**: ${ms(createdDate.setFullYear(currentDate.getFullYear()) - currentDate, options)}`
+
+		"\n**__server joined__**",
+		`**date**: ${joinedDate.toLocaleString()}`,
+		`**age**: ${ms(currentDate - joinedDate, options)}`,
 	];
 
 	msg.channel.send({
@@ -32,14 +38,17 @@ module.exports.run = async (msg, args) => {
 				name: user.tag,
 				icon_url: user.avatarURL()
 			},
-			description: descriptionArray.join("\n")
+			description: descriptionArray.join("\n"),
+			footer: {
+				text: `ms: ${createdDate.getTime()} | ${joinedDate.getTime()}`
+			}
 		}
 	});
 }
 module.exports.meta = {
 	name: "age",
 	aliases: [],
-	description: "tells the age of your discord account",
+	description: "tells the age of your discord account and when you joined the server",
 	usage: "age",
 	argsRequired: false,
 	category: "utility"
