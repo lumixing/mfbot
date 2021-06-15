@@ -97,26 +97,32 @@ module.exports = class HigherLower {
 
 	async awaitResponse(msg) {
 		let filter = (m) => m.author.id === this.#x.id || m.author.id === this.#o.id;
-		let response = await msg.channel.awaitMessages(filter, { max: 1, time: 60000 });
-		let author = response.first().author;
-		response = response.first().content;
+		msg.channel.awaitMessages(filter, { max: 1, time: 30000, errors: ["time"] })
+			.then((response) => {
+				let author = response.first().author;
+				response = response.first().content;
 
-		if (this.checkForQuit(msg, response, author)) return;
+				if (this.checkForQuit(msg, response, author)) return;
 
-		if (this.checkForWrongTurn(msg, author)) return
+				if (this.checkForWrongTurn(msg, author)) return
 
-		response = parseInt(response);
+				response = parseInt(response);
 
-		if (this.checkForInvalid(msg, response)) return;
-		if (this.checkForOccupied(msg, response)) return;
+				if (this.checkForInvalid(msg, response)) return;
+				if (this.checkForOccupied(msg, response)) return;
 
-		this.updateBoard(response - 1, this.#turn);
+				this.updateBoard(response - 1, this.#turn);
 
-		if (this.checkForEndGame(msg)) return;
+				if (this.checkForEndGame(msg)) return;
 
-		this.switchTurns();
-		this.sendEmbedTurn(msg);
-		this.awaitResponse(msg);
+				this.switchTurns();
+				this.sendEmbedTurn(msg);
+				this.awaitResponse(msg);
+			})
+			.catch((err) => {
+				msg.channel.send(`<@${this.#turn.id}> ran out of time and the game ended in a tie`);
+				return this.deleteGame();
+			});
 	}
 
 	checkForQuit(msg, response, author) {
