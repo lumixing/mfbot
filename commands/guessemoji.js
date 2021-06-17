@@ -10,7 +10,7 @@ module.exports.run = async (msg, args) => {
 	msg.channel.send(`:${emojisArray[rng]}:`);
 
 	const filter = (m) => m.author.id === msg.author.id;
-	msg.channel.awaitMessages(filter, { time: 30000, max: 1 })
+	msg.channel.awaitMessages(filter, { time: 5000, max: 1, errors: ["time"] })
 		.then(async (c) => {
 			let reply = c.first().content;
 
@@ -52,6 +52,22 @@ module.exports.run = async (msg, args) => {
 					}
 				});
 			}
+		})
+		.catch(async (err) => {
+			if (!streaks.has(msg.guild.id)) {
+				streaks.set(msg.guild.id, 0);
+			}
+
+			let currentStreak = await streaks.get(msg.guild.id);
+
+			streaks.set(msg.guild.id, 0);
+
+			msg.channel.send({
+				embed: {
+					color: RED,
+					description: `**${msg.author.username}** ran out of time!\n**emojiAI:** ${emojisArray[rng]}\nway to ruin the \`${currentStreak}\` streak`,
+				}
+			});
 		});
 }
 module.exports.meta = {
