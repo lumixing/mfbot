@@ -10,7 +10,7 @@ module.exports.run = async (msg, args) => {
 	msg.channel.send(`:${emojisArray[rng]}:`);
 
 	const filter = (m) => m.author.id === msg.author.id;
-	msg.channel.awaitMessages(filter, { time: 5000, max: 1, errors: ["time"] })
+	msg.channel.awaitMessages(filter, { time: 60000, max: 1, errors: ["time"] })
 		.then(async (c) => {
 			let reply = c.first().content;
 
