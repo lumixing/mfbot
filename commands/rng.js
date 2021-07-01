@@ -1,4 +1,3 @@
-const { isNegativeDependencies } = require("mathjs");
 const error = require("../functions/error");
 
 module.exports.run = async (msg, args) => {
