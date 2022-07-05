@@ -6,7 +6,9 @@ const client = new SapphireClient({
     caseInsensitiveCommands: true,
     logger: { level: LogLevel.Debug },
     shards: "auto",
-    intents: ["GUILDS", "GUILD_MESSAGES"]
+    intents: ["GUILDS", "GUILD_MESSAGES"],
+    failIfNotExists: false,
+    presence: { activities: [{ name: "random message here! | ;help" }] }
 });
 
 const main = async () => {
