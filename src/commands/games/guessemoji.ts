@@ -1,7 +1,7 @@
 import { ApplyOptions } from "@sapphire/decorators";
 import { Command, CommandOptions, container } from "@sapphire/framework";
 import { reply } from "@sapphire/plugin-editable-commands";
-import type { Message } from "discord.js";
+import type { GuildMember, Message } from "discord.js";
 import { emojis } from "../../assets/emojis.json";
 
 @ApplyOptions<CommandOptions>({
@@ -25,14 +25,32 @@ export class UserCommand extends Command {
 
             if (replyMessage === randomEmoji) {
                 container.guessEmojiStreak.set(message.guild?.id!, streak! + 1);
-                return reply(emojiMessage, `${message.member?.toString()} got it right!\nstreak: \`${++streak!}\``);
+                return reply(emojiMessage, { embeds: [this.returnEmbed(message.member!, streak!, randomEmoji, "success")] });
             }
 
             container.guessEmojiStreak.set(message.guild?.id!, 0);
-            return reply(emojiMessage, `${message.member?.toString()} got it wrong...\nit was \`${randomEmoji}\``);
+            return reply(emojiMessage, { embeds: [this.returnEmbed(message.member!, streak!, randomEmoji, "fail")] });
         } catch (err: any) {
             container.guessEmojiStreak.set(message.guild?.id!, 0);
-            return reply(emojiMessage, `${message.member?.toString()} ran out of time...\nit was \`${randomEmoji}\``);
+            return reply(emojiMessage, { embeds: [this.returnEmbed(message.member!, streak!, randomEmoji, "timeout")] });
         }
+    }
+
+    private returnEmbed(member: GuildMember, streak: number, emoji: string, type: "success" | "fail" | "timeout") {
+        let title;
+
+        if (type === "success") title = `correct emote!`;
+        else if (type === "fail") title = `wrong emote!\nit was \`${emoji}\``;
+        else title = `ran out of time!\nit was \`${emoji}\``;
+
+        return {
+            color: type === "success" ? 0x2ecc71 : 0xe74c3c,
+            author: {
+                name: member.nickname! ?? member.user.username,
+                icon_url: member?.user.avatarURL()!
+            },
+            title,
+            description: type === "success" ? `current streak: \`${streak + 1}\`` : `lost streak: \`${streak}\``
+        };
     }
 }
