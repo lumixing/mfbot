@@ -1,0 +1,25 @@
+{
+    "correct": [
+        "nice!",
+        "found it!",
+        "good job!",
+        "wow!",
+        "googled it huh?",
+        "how did you remember that?"
+    ],
+    "incorrect": [
+        "u noob!",
+        "rip",
+        "awww",
+        "so bad",
+        "hahahahahah",
+        "can it get any worse?",
+        "bro?",
+        "💀",
+        "how are you so bad?"
+    ],
+    "timeout": [
+        "take your time idiot",
+        "write faster lol"
+    ]
+}
