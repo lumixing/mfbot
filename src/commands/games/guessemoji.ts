@@ -18,6 +18,13 @@ export class UserCommand extends Command {
 
     public async messageRun(message: Message) {
         this.guildID = message.guild?.id!;
+
+        if (this.container.guessEmojiPlaying.includes(this.guildID)) {
+            return reply(message, "somebody is already playing!");
+        }
+
+        this.container.guessEmojiPlaying.push(this.guildID);
+
         this.member = message.member!;
         this.streaks = this.container.guessEmojiStreak;
         this.streak = this.streaks.has(this.guildID) ? this.streaks.get(this.guildID)! : 0;
@@ -35,24 +42,31 @@ export class UserCommand extends Command {
                     return this.setStreakAndReply(++this.streak!, emojiMessage, "correct");
                 }
 
-                return this.setStreakAndReply(0, emojiMessage, "incorrect");
+                this.setStreakAndReply(0, emojiMessage, "incorrect");
             })
             .catch((err) => {
                 if (err instanceof Collection) {
                     return this.setStreakAndReply(0, emojiMessage, "timeout");
                 }
 
-                this.container.logger.error(";Could not await messages in channel", err);
+                this.container.logger.error(";Could not await messages in channel, deleting isPlaying manually...", err);
+                this.removeGuildFromPlaying();
             });
     }
 
     private setStreakAndReply(newStreak: number, message: Message, type: string) {
         this.streaks.set(this.guildID, newStreak);
+        this.removeGuildFromPlaying();
 
         reply(message, {
             content: this.member.toString(),
             embeds: [this.returnEmbed(type, newStreak)]
         });
+    }
+
+    private removeGuildFromPlaying() {
+        const index = this.container.guessEmojiPlaying.indexOf(this.guildID);
+        this.container.guessEmojiPlaying.splice(index, 1);
     }
 
     private returnEmbed(type: string, streak: number) {

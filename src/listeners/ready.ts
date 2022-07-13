@@ -25,6 +25,7 @@ export class UserEvent extends Listener {
         logger.info(green("Ready!"));
 
         this.container.guessEmojiStreak = new Collection();
+        this.container.guessEmojiPlaying = [];
     }
 
     private styleStore(store: Store<any>, last: boolean) {
@@ -36,5 +37,8 @@ declare module "@sapphire/pieces" {
     interface Container {
         // Collection<GuildID: string, Streak: number>
         guessEmojiStreak: Collection<string, number>;
+
+        // Collection<GuildID: string, isPlaying: boolean>
+        guessEmojiPlaying: string[];
     }
 }
